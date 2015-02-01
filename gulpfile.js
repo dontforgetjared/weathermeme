@@ -14,7 +14,8 @@ var gulp = require('gulp'),
     jasmine = require('gulp-jasmine')
     source      = require('vinyl-source-stream'), // makes browserify bundle compatible with gulp
     streamify   = require('gulp-streamify'),
-    browserify  = require('browserify');
+    browserify  = require('browserify'),
+    karma = require('karma').server;
 
 // Styles
 gulp.task('styles', function() {
@@ -29,9 +30,11 @@ gulp.task('styles', function() {
 });
 
 // Test JS
-gulp.task('specs', function () {
-    return gulp.src('src/tests/*.js')
-        .pipe(jasmine());
+gulp.task('test', function (done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done);
 });
 
 // Concatenate, Browserify & Minify JS
@@ -42,29 +45,28 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('./assets/js'));
 });
 
-//Scripts
-gulp.task('lib', function() {
-  console.log(mainBowerFiles({
-            filter: /.js/i,
-            paths: {
-                bowerDirectory: 'bower_components',
-                bowerJson: 'bower.json'
-            }
-        }));
-    return gulp.src(mainBowerFiles({
-            filter: /.js/i,
-            paths: {
-                bowerDirectory: 'bower_components',
-                bowerJson: 'bower.json'
-            }
-        }))
-        .pipe(concat('lib.js'))
-        .pipe(gulp.dest('assets/scripts/lib'))
-        .pipe(rename({suffix: '.min'}))
-        //.pipe(uglify())
-        .pipe(gulp.dest('assets/scripts/lib'))
-        .pipe(notify({ message: 'Libs task complete' }));
-});
+// gulp.task('lib', function() {
+//   console.log(mainBowerFiles({
+//             filter: /.js/i,
+//             paths: {
+//                 bowerDirectory: 'bower_components',
+//                 bowerJson: 'bower.json'
+//             }
+//         }));
+//     return gulp.src(mainBowerFiles({
+//             filter: /.js/i,
+//             paths: {
+//                 bowerDirectory: 'bower_components',
+//                 bowerJson: 'bower.json'
+//             }
+//         }))
+//         .pipe(concat('lib.js'))
+//         .pipe(gulp.dest('assets/scripts/lib'))
+//         .pipe(rename({suffix: '.min'}))
+//         //.pipe(uglify())
+//         .pipe(gulp.dest('assets/scripts/lib'))
+//         .pipe(notify({ message: 'Libs task complete' }));
+// });
 
 // Images
 gulp.task('images', function() {
@@ -83,11 +85,6 @@ gulp.task('clean', function() {
 // Default task
 gulp.task('default', ['clean'], function() {
     gulp.start('styles', 'images');
-});
-
-// Run JS tests
-gulp.task('test', function(){
-  gulp.start('specs');
 });
 
 // Watch
