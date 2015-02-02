@@ -1,6 +1,6 @@
 'use strict';
 
-describe("Weather Service", function() {
+describe('Weather Service', function() {
 
 	var scope, weatherSrvc, result, $q, $scope, httpBackend;
 
@@ -15,19 +15,19 @@ describe("Weather Service", function() {
 		})
 	});
 
-	describe("Today's forecast service", function() {
+	describe('Todays forecast service', function() {
 		beforeEach(function() {
 			spyOn(weatherSrvc, 'getTodaysForecast');
 		});
 		
-		it("should call today's forecast from weather service", function() {
+		it('should call todays forecast from weather service', function() {
 			weatherSrvc.getTodaysForecast('Boulder,CO');
 			expect(weatherSrvc.getTodaysForecast).toHaveBeenCalled();
 		});	
 	});
 
-	describe("Today's forecast Weather API call", function() {
-		it("should get today's forecast json", function() {
+	describe('Todays forecast Weather API call', function() {
+		it('should get todays forecast json', function() {
 			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/weather?q=Boulder,Co')
 	 			.respond({cod: 200});
 	 		var data = weatherSrvc.getTodaysForecast('Boulder,Co');
@@ -37,19 +37,19 @@ describe("Weather Service", function() {
 		});
 	});
 
-	describe("10 day forecast service", function() {
+	describe('10 day forecast service', function() {
 		beforeEach(function() {
 			spyOn(weatherSrvc, 'getTenDayForecast');
 		});
 		
-		it("should call ten day forecast from weather service", function() {
+		it('should call ten day forecast from weather service', function() {
 			weatherSrvc.getTenDayForecast('Boulder,CO');
 			expect(weatherSrvc.getTenDayForecast).toHaveBeenCalled();
 		});	
 	});
 
-	describe("Ten day forecast Weather API call", function() {
-		it("should get the ten day forecast json", function() {
+	describe('Ten day forecast Weather API call', function() {
+		it('should get the ten day forecast json', function() {
 			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/forecast?q=Boulder,Co')
 	 			.respond({cod: 200});
 	 		var data = weatherSrvc.getTenDayForecast('Boulder,Co');
