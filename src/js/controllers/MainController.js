@@ -22,16 +22,19 @@
 						.then(function(todaysForecast) {
 							$scope.todaysForecast = todaysForecast;
 							$scope.contentLoaded = true;
+
+							WeatherService.getForecastByLocation($scope.loc)
+								.then(function(weeklyForecast) {
+									$scope.weeklyForecast = weeklyForecast;
+								}, function(error) {
+									console.log(error);
+								});
+
 						}, function(error) {
 							console.log(error);
 						});
 
-					WeatherService.getForecastByLocation($scope.loc)
-						.then(function(weeklyForecast) {
-							$scope.weeklyForecast = weeklyForecast;
-						}, function(error) {
-							console.log(error);
-						});
+					
 
 				}, function(error) {
 					//show location form
@@ -49,16 +52,16 @@
 				.then(function(todaysForecast) {
 					$scope.todaysForecast = todaysForecast;
 					$scope.contentLoaded = true;
+
+					WeatherService.getForecastByCity($scope.cityName)
+						.then(function(weeklyForecast) {
+							$scope.weeklyForecast = weeklyForecast;
+						}, function(error) {
+							console.log(error);
+						});	
 				}, function(error) {
 					console.log(error);
 				});
-
-			WeatherService.getForecastByCity($scope.cityName)
-				.then(function(weeklyForecast) {
-					$scope.weeklyForecast = weeklyForecast;
-				}, function(error) {
-					console.log(error);
-				});	
 		};
 
 		$scope.getByLocation();
