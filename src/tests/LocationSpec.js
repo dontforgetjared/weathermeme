@@ -2,6 +2,7 @@ describe("Location Service", function() {
 	var locSrvc, $q, $rootScope, position;
 
 	beforeEach(module('WeatherMeme'));
+	beforeEach(module('ngAnimate'));
 
 	beforeEach(function() {
 		inject(function(_$q_, _$rootScope_, LocationService) {

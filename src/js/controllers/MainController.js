@@ -5,34 +5,63 @@
 
 	app.controller('MainController', ['$scope', '$q', 'WeatherService', 'LocationService', function($scope, $q, WeatherService, LocationService) {
 		$scope.loc = '';
-		$scope.position;
+		$scope.cityName = '';
+		$scope.showForm = false;
+		$scope.contentLoaded = false;
+		$scope.todaysForecast = {};
+		$scope.weeklyForecast = {};
 
-		$scope.getLocation = function() {
+		$scope.getByLocation = function() {
 			if ('geolocation' in navigator) {
-				console.log('foo');
 				var promise = LocationService.getLocation();
 
 				promise.then(function(data) {
-					console.log(data);
+					$scope.loc = 'lat=' + data.coords.latitude + '&lon=' + data.coords.longitude;
+
+					WeatherService.getTodaysByLocation($scope.loc)
+						.then(function(todaysForecast) {
+							$scope.todaysForecast = todaysForecast;
+							$scope.contentLoaded = true;
+						}, function(error) {
+							console.log(error);
+						});
+
+					WeatherService.getForecastByLocation($scope.loc)
+						.then(function(weeklyForecast) {
+							$scope.weeklyForecast = weeklyForecast;
+						}, function(error) {
+							console.log(error);
+						});
+
 				}, function(error) {
+					//show location form
+					$scope.showForm = true;
 					console.log(error);
 				});
 			} else {
-				console.log('bar');
-				$scope.loc = '';
+				//show location form
+				$scope.showForm = true;
 			}
 		};
 
-		$scope.getTodays = function() {
-			var promise = WeatherService.getTodaysForecast($scope.loc);
+		$scope.getByCityName = function() {
+			WeatherService.getTodaysByCity($scope.cityName)
+				.then(function(todaysForecast) {
+					$scope.todaysForecast = todaysForecast;
+					$scope.contentLoaded = true;
+				}, function(error) {
+					console.log(error);
+				});
 
-			promise.then(function(data) {
-				console.log(data);
-			});
-
+			WeatherService.getForecastByCity($scope.cityName)
+				.then(function(weeklyForecast) {
+					$scope.weeklyForecast = weeklyForecast;
+				}, function(error) {
+					console.log(error);
+				});	
 		};
 
-		$scope.getLocation();
+		$scope.getByLocation();
 	}]);
 
 })();

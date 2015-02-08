@@ -2,60 +2,54 @@
 
 describe('Weather Service', function() {
 
-	var scope, weatherSrvc, result, $q, $scope, httpBackend;
+	var scope, weatherSrvc, result, $q, $scope, httpBackend, apiKey;
 
 	beforeEach(module('WeatherMeme'));
+	beforeEach(module('ngAnimate'));
 
 	beforeEach(function() {
-		inject(function($httpBackend, _$q_, _$rootScope_, WeatherService) {
+		inject(function($httpBackend, _$q_, _$rootScope_, WeatherService, API_KEY) {
 			httpBackend = $httpBackend;
 			weatherSrvc = WeatherService;
 			$q = _$q_;
-			$scope = _$rootScope_;
+			$scope = _$rootScope_.$new();
+			apiKey = API_KEY;
 		})
 	});
 
-	describe('Todays forecast service', function() {
-		beforeEach(function() {
-			spyOn(weatherSrvc, 'getTodaysForecast');
-		});
-		
-		it('should call todays forecast from weather service', function() {
-			weatherSrvc.getTodaysForecast('Boulder,CO');
-			expect(weatherSrvc.getTodaysForecast).toHaveBeenCalled();
-		});	
-	});
-
-	describe('Todays forecast Weather API call', function() {
-		it('should get todays forecast json', function() {
-			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/weather?q=Boulder,Co')
+	describe('Forecast by city name', function() {
+		it('should get todays weather by city name', function() {	
+			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/weather?q=Boulder,Co&APPID=' + apiKey)
 	 			.respond({cod: 200});
-	 		var data = weatherSrvc.getTodaysForecast('Boulder,Co');
+	 		var todays = weatherSrvc.getTodaysByCity('Boulder,Co');
 	 		httpBackend.flush();
-
-	 		expect(data.$$state.value.cod).toBe(200);
+			expect(todays.$$state.value.cod).toBe(200);	
 		});
-	});
 
-	describe('10 day forecast service', function() {
-		beforeEach(function() {
-			spyOn(weatherSrvc, 'getTenDayForecast');
-		});
-		
-		it('should call ten day forecast from weather service', function() {
-			weatherSrvc.getTenDayForecast('Boulder,CO');
-			expect(weatherSrvc.getTenDayForecast).toHaveBeenCalled();
-		});	
-	});
-
-	describe('Ten day forecast Weather API call', function() {
-		it('should get the ten day forecast json', function() {
-			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/forecast?q=Boulder,Co')
+		it('should get the 7 day forecast by city name', function() {			
+			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/forecast/daily?q=Boulder,Co&cnt=7&APPID=' + apiKey)
 	 			.respond({cod: 200});
-	 		var data = weatherSrvc.getTenDayForecast('Boulder,Co');
+	 		var tenDay = weatherSrvc.getForecastByCity('Boulder,Co');
 	 		httpBackend.flush();
+			expect(tenDay.$$state.value.cod).toBe(200);	
+		});
+	});
 
-	 		expect(data.$$state.value.cod).toBe(200);
+	describe('Forecast by location', function() {
+		it('should get todays weather by city name', function() {	
+			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/weather?lon=-105.0621818&lat=40.0394514&APPID=' + apiKey)
+	 			.respond({cod: 200});
+	 		var todays = weatherSrvc.getTodaysByLocation('lon=-105.0621818&lat=40.0394514');
+	 		httpBackend.flush();
+			expect(todays.$$state.value.cod).toBe(200);	
+		});	
+
+		it('should get the 7 day forecast by city name', function() {			
+			httpBackend.when('GET', 'http://api.openweathermap.org/data/2.5/forecast/daily?lon=-105.0621818&lat=40.0394514&cnt=7&APPID=' + apiKey)
+	 			.respond({cod: 200});
+	 		var tenDay = weatherSrvc.getForecastByLocation('lon=-105.0621818&lat=40.0394514');
+	 		httpBackend.flush();
+			expect(tenDay.$$state.value.cod).toBe(200);	
 		});
 	});
 
