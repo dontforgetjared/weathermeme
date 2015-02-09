@@ -42,6 +42,7 @@
 						<img ng-src="assets/images/{{todaysForecast.weather[0].icon}}.png" />
 					</div>
 					<div class="todays-forecast pull-left">
+						<p class="text-center">{{ clock  | date:'medium'}}</p>
 						<h1 class="temp">{{ todaysForecast.main.temp | kelvinToFahrenheit }}&deg;</h1>
 						<h2 class="text-center">{{ todaysForecast.weather[0].main }}</h2>
 						<hr />
@@ -55,7 +56,8 @@
 					<div class="col-md-2">
 						<div class="thumbnail">
 							<p>{{ forecast.dt * 1000 | date:'EEE' }}</p>
-							<p>{{ forecast.temp.day | kelvinToFahrenheit }}</p>
+							<img ng-src="assets/images/small/{{todaysForecast.weather[0].icon}}.png" />
+							<h1 class="text-center">{{ forecast.temp.day | kelvinToFahrenheit }}&deg;</h1>
 						</div>
 					</div>
 				</div>

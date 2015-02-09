@@ -7170,7 +7170,6 @@ body {
 }
 
 .todays {
-  height: 512px;
   padding: 20px;
   opacity: 0;
   transition: all 200ms ease-in-out;

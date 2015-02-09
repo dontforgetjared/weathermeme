@@ -33,6 +33,11 @@ describe("Location Service", function() {
 
 			$rootScope.$digest();
 		});
+	});
 
+	describe("Geocoding", function() {
+		it("should get the latitude and longitude by city name", function() {
+			
+		});
 	});
 });
