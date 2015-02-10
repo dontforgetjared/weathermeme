@@ -8,10 +8,10 @@
 
 	app.factory('WeatherService', ['$http', '$q', 'API_KEY', 'WEATHER_API', function($http, $q, API_KEY, WEATHER_API) {
 		return {		
-			getForecastByLocation: function(lat, lon) {
+			getForecast: function(lat, lon) {
 				var deffered = $q.defer();
 
-				$http.get(WEATHER_API + API_KEY + '/' + lat + ',' + lon)
+				$http.get('//jsonp.nodejitsu.com/?url=' + encodeURI(WEATHER_API + API_KEY + '/' + lat + ',' + lon))
 					.success(function(res) {
 						deffered.resolve(res);
 					})

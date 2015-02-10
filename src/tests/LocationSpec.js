@@ -35,9 +35,20 @@ describe("Location Service", function() {
 		});
 	});
 
-	describe("Geocoding", function() {
-		it("should get the latitude and longitude by city name", function() {
-			
-		});
-	});
+	// describe("Geocoding", function() {
+	// 	it("should get the latitude and longitude by city name", function() {
+	// 		spyOn(google.maps, "Geocoder").and.callFake(function() {
+	// 			var data = { lat: 40.014986, lng: -105.270546};
+	// 			return data;
+	// 		});	
+
+	// 		var promise = locSrvc.getLatLng ("Boulder, Colorado");
+
+	// 		promise.then(function(data) {
+	// 			expect(data.lat).toBe(40.014986);
+	// 		});
+
+	// 		$rootScope.$digest();
+	// 	});
+	// });
 });

@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true',
       './bower_components/angular/angular.js',
       './bower_components/angular/nganimate.min.js',
       './bower_components/angular-mocks/angular-mocks.js',
