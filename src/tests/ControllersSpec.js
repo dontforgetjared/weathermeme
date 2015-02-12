@@ -24,7 +24,7 @@ describe('Controllers', function() {
 		beforeEach(function() {
 			spyOn(weatherSrvc, 'getForecast').and.callFake(function() {
             	var deferred = q.defer();
-            	deferred.resolve({currently: {summary: 'Clear'}});
+            	deferred.resolve({currently: {summary: 'Clear'}, daily: {data: [{summary: 'Clear'}]}});
             	return deferred.promise;
             });
 
@@ -41,10 +41,6 @@ describe('Controllers', function() {
             });
 		});
 
-		// afterEach(function() {
-		// 	scope.$apply();
-		// });
-
 // 		describe('Get the forecast by location', function() {
 // 			it('should get the forecast by location', function() {
 // 				scope.getByLocation();
@@ -59,6 +55,7 @@ describe('Controllers', function() {
 				scope.getByCityName();	
 				scope.$digest();
 				expect(scope.curForecast.summary).toBe('Clear');
+				expect(scope.weeklyForecast.data[0].summary).toBe('Clear');
 			});
 		});
 

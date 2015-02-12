@@ -20,6 +20,13 @@ body {
   }
 }
 
+.forecast-date {
+  span {
+    font-size: 14px;
+    vertical-align: middle;
+  }
+}
+
 // Animations
 .fade-in.ng-enter {
   /* standard transition code */

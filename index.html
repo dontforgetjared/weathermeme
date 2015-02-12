@@ -13,17 +13,11 @@
 			<nav class="navbar navbar-default">
 				<div class="container-fluid">
 					<div class="navbar-header">
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
 						<a class="navbar-brand" href="#">
 							<img class="brand-img" src="assets/images/nyan-cat.gif" /> WeatherMeme
 						</a>
 					</div>
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+					<div>
 						<form class="navbar-form navbar-left" data-ng-show="showForm" data-ng-submit="getByCityName()">
 							<div class="form-group">
 								<input type="text" class="form-control" id="location" placeholder="Location" data-ng-model="cityName" required>
@@ -41,26 +35,30 @@
 				</div>
 				<div class="row">
 					<div class="todays" ng-show="contentLoaded" ng-class="{'fade-in': contentLoaded}">
-						<div class="weather-icon pull-left">
-							<img ng-src="assets/images/{{todaysForecast.weather[0].icon}}.png" />
+						<div class="weather-icon col-md-4">
+							<img class="img-responsive center-block" ng-src="assets/images/{{curForecast.icon}}.png" />
 						</div>
-						<div class="todays-forecast pull-left">
+						<div class="todays-forecast col-md-4">
 							<p class="text-center">{{ clock  | date:'medium'}}</p>
-							<h1 class="temp">{{ curForecast.temperature }}&deg;</h1>
+							<h1 class="text-center temp">{{ curForecast.temperature | number:0 }}&deg;</h1>
 							<h2 class="text-center">{{ curForecast.summary }}</h2>
 							<hr />
 							<p>Humidity: {{ curForecast.humidity }}%</p>
-							<p>Wind: {{ todaysForecast.wind.deg | windDirection}} {{ todaysForecast.windSpeed }}</p>
+							<p>Wind: {{ curForecast.windBearing | windDirection}} {{ curForecast.windSpeed }}</p>
 						</div>
 					</div>
 				</div>
 				<div class="weekly-forecast row">
-					<div ng-repeat="forecast in weeklyForecast.list" ng-show="!$first" class="fade-in">
+					<div ng-repeat="forecast in weeklyForecast.data" ng-show="!$first && !$last" class="fade-in">
 						<div class="col-md-2">
 							<div class="thumbnail">
-								<p>{{ forecast.dt * 1000 | date:'EEE' }}</p>
-								<img ng-src="assets/images/small/{{todaysForecast.weather[0].icon}}.png" />
-								<h1 class="text-center">{{ forecast.temp.day | kelvinToFahrenheit }}&deg;</h1>
+								<h3 class="forecast-date text-center">{{ forecast.time * 1000 | date:'EEE' }} 
+									<span class="subtle">{{ forecast.time * 1000 | date:'MMM d' }}</span>
+								</h3>
+								<img class="img-responsive" ng-src="assets/images/small/{{forecast.icon}}.png" />
+								<h1 class="forecast-temp text-center">
+									{{ forecast.temperatureMax | number:0 }}&deg; <span class="subtle">{{ forecast.temperatureMin | number:0 }}&deg;</span>
+								</h1>
 							</div>
 						</div>
 					</div>

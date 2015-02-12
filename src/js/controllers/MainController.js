@@ -23,10 +23,10 @@
 				var loc = LocationService.getLatLng($scope.cityName);
 
 				loc.then(function(data) {
-					console.log(data);
 					var forecast = WeatherService.getForecast(data.k, data.D);
 					forecast.then(function(res) {
 						$scope.curForecast = res.currently;
+						$scope.weeklyForecast = res.daily;
 						$scope.contentLoaded = true;
 					});
 				});

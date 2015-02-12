@@ -7150,7 +7150,7 @@ button.close {
   }
 }
 h1.temp {
-  font-size: 136px;
+  font-size: 118px;
 }
 
 h2.conditions {
@@ -7159,6 +7159,10 @@ h2.conditions {
 
 .todays {
   color: #fff;
+}
+
+.subtle {
+  color: #959595;
 }
 
 body {
@@ -7179,6 +7183,11 @@ body {
 }
 .todays .todays-forecast {
   padding: 20px;
+}
+
+.forecast-date span {
+  font-size: 14px;
+  vertical-align: middle;
 }
 
 .fade-in.ng-enter {
