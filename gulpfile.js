@@ -1,5 +1,7 @@
 // Load plugins
 var gulp = require('gulp'),
+    concat = require('gulp-concat'),
+    mainBowerFiles = require('main-bower-files'),
     sass = require('gulp-ruby-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     minifycss = require('gulp-minify-css'),
@@ -12,9 +14,6 @@ var gulp = require('gulp'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
     jasmine = require('gulp-jasmine')
-    source      = require('vinyl-source-stream'), // makes browserify bundle compatible with gulp
-    streamify   = require('gulp-streamify'),
-    browserify  = require('browserify'),
     karma = require('karma').server;
 
 // Styles
@@ -37,36 +36,16 @@ gulp.task('test', function (done) {
   }, done);
 });
 
-// Concatenate, Browserify & Minify JS
+// Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return browserify('./src/js/app.js').bundle()
-        .pipe(source('main.min.js'))
-        .pipe(streamify(uglify()))
-        .pipe(gulp.dest('./assets/js'));
+    return gulp.src('src/js/**/*.js')
+      .pipe(concat('main.js'))
+      .pipe(gulp.dest('assets/js'))
+      .pipe(rename({suffix: '.min'}))
+      .pipe(uglify())
+      .pipe(gulp.dest('assets/js'))
+      .pipe(notify({message: 'Main js file created'}));
 });
-
-// gulp.task('lib', function() {
-//   console.log(mainBowerFiles({
-//             filter: /.js/i,
-//             paths: {
-//                 bowerDirectory: 'bower_components',
-//                 bowerJson: 'bower.json'
-//             }
-//         }));
-//     return gulp.src(mainBowerFiles({
-//             filter: /.js/i,
-//             paths: {
-//                 bowerDirectory: 'bower_components',
-//                 bowerJson: 'bower.json'
-//             }
-//         }))
-//         .pipe(concat('lib.js'))
-//         .pipe(gulp.dest('assets/scripts/lib'))
-//         .pipe(rename({suffix: '.min'}))
-//         //.pipe(uglify())
-//         .pipe(gulp.dest('assets/scripts/lib'))
-//         .pipe(notify({ message: 'Libs task complete' }));
-// });
 
 // Images
 gulp.task('images', function() {
@@ -84,7 +63,7 @@ gulp.task('clean', function() {
 
 // Default task
 gulp.task('default', ['clean'], function() {
-    gulp.start('styles', 'images');
+    gulp.start('styles', 'images', 'scripts');
 });
 
 // Watch
@@ -94,7 +73,7 @@ gulp.task('watch', function() {
   gulp.watch('src/styles/*.scss', ['styles']);
 
   // Watch .js files
-  //gulp.watch('src/scripts/**/*.js', ['scripts']);
+  gulp.watch('src/scripts/**/*.js', ['scripts']);
 
   // Watch image files
   gulp.watch('src/img/**/*', ['images']);

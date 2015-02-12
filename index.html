@@ -4,9 +4,11 @@
 		<title>WeatherMeme</title>
 
 		<link rel="stylesheet" type="text/css" href="assets/styles/main.min.css ">
+		<link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-		<!-- <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyBnoEa1Rm1bb8qcA_YtOqYmmbA7QYq0zEI"></script> -->
+		
 	</head>
 	<body>
 		<div data-ng-controller="MainController">
@@ -34,7 +36,7 @@
 					<div class="loader">Loading...</div>
 				</div>
 				<div class="row">
-					<div class="todays" ng-show="contentLoaded" ng-class="{'fade-in': contentLoaded}">
+					<div class="todays clearfix" ng-show="contentLoaded" ng-class="{'fade-in': contentLoaded}">
 						<div class="weather-icon col-md-4">
 							<img class="img-responsive center-block" ng-src="assets/images/{{curForecast.icon}}.png" />
 						</div>
@@ -69,10 +71,6 @@
 
 		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 		<script type="text/javascript" src="bower_components/angular/nganimate.min.js"></script>
-		<script type="text/javascript" src="src/js/app.js"></script>
-		<script type="text/javascript" src="src/js/services/WeatherService.js"></script>
-		<script type="text/javascript" src="src/js/services/LocationService.js"></script>
-		<script type="text/javascript" src="src/js/controllers/MainController.js"></script>
-		<script type="text/javascript" src="src/js/filters/TempFilter.js"></script>
+		<script type="text/javascript" src="assets/js/main.min.js"></script>
 	</body>
 </html

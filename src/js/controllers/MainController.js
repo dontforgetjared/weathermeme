@@ -37,7 +37,6 @@
 					var loc = LocationService.getGeo();
 
 					loc.then(function(data) {
-						console.log(data);
 						var forecast = WeatherService.getForecast(data.coords.latitude, data.coords.longitude);
 						forecast.then(function(res) {
 							$scope.curForecast = res.currently;

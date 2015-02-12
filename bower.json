@@ -1,0 +1,15 @@
+{
+  "name": "WeatherMeme",
+  "version": "1",
+  "authors": [
+    "Jared Cole <jaredrcole@gmail.com>"
+  ],
+  "description": "WeatherMeme weather app",
+  "main": "index.html",
+  "keywords": [
+    "Weather"
+  ],
+  "license": "MIT",
+  "homepage": "www.dontforgetjared.com",
+  "private": true
+}
