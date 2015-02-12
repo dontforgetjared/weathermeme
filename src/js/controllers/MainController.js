@@ -7,7 +7,7 @@
 		function($scope, $q, $timeout, WeatherService, LocationService) {
 			$scope.loc = '';
 			$scope.cityName = '';
-			$scope.showForm = true;
+			$scope.showForm = false;
 			$scope.contentLoaded = false;
 			$scope.curForecast = {};
 			$scope.weeklyForecast = {};
@@ -32,7 +32,25 @@
 				});
 			};
 
-			//$scope.getByCityName();
+			$scope.getByLocation = function() {
+				if ('geolocation' in navigator) {
+					var loc = LocationService.getGeo();
+
+					loc.then(function(data) {
+						console.log(data);
+						var forecast = WeatherService.getForecast(data.coords.latitude, data.coords.longitude);
+						forecast.then(function(res) {
+							$scope.curForecast = res.currently;
+							$scope.weeklyForecast = res.daily;
+							$scope.contentLoaded = true;	
+						});
+					}); 
+				} else {
+					$scope.showForm = true;	
+				}
+			};
+
+			$scope.getByLocation();
 			$timeout(dateTime, $scope.interval);
 		}
 	]);

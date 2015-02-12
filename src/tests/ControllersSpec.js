@@ -41,14 +41,21 @@ describe('Controllers', function() {
             });
 		});
 
-// 		describe('Get the forecast by location', function() {
-// 			it('should get the forecast by location', function() {
-// 				scope.getByLocation();
-// 				scope.$digest();
-// 				expect(scope.todaysForecast.someFake).toBe('today');
-// 				expect(scope.weeklyForecast.someFake).toBe('weekly');
-// 			});
-// 		});
+		describe('Get the forecast by location', function() {
+			beforeEach(function() {
+				spyOn(navigator.geolocation,"getCurrentPosition").and.callFake(function() {
+			        position = { coords: { latitude: 40.014986, longitude: -105.270546 } };
+			        arguments[0](position);
+            	});	
+			});
+			
+			it('should get the forecast by location', function() {
+				scope.getByLocation();
+				scope.$digest();
+				expect(scope.curForecast.summary).toBe('Clear');
+				expect(scope.weeklyForecast.data[0].summary).toBe('Clear');
+			});
+		});
 
 		describe('Get the forecast by city name', function() {
 			it('should get the forecast by city name', function() {

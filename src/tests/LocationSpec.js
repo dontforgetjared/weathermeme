@@ -35,20 +35,21 @@ describe("Location Service", function() {
 		});
 	});
 
-	// describe("Geocoding", function() {
-	// 	it("should get the latitude and longitude by city name", function() {
-	// 		spyOn(google.maps, "Geocoder").and.callFake(function() {
-	// 			var data = { lat: 40.014986, lng: -105.270546};
-	// 			return data;
-	// 		});	
+	describe("Geo location", function() {
+		it("should return a users lon and lat", function() {	
+			spyOn(navigator.geolocation,"getCurrentPosition").and.callFake(function() {
+		        position = { coords: { latitude: 40.014986, longitude: -105.270546 } };
+		        arguments[0](position);
+            });		
+			
+			var promise = locSrvc.getGeo();
+			
+			promise.then(function(data) {
+				expect(data.coords.latitude === 40.014986 && data.coords.longitude === -105.270546).toBeTruthy();
+			});
 
-	// 		var promise = locSrvc.getLatLng ("Boulder, Colorado");
+			$rootScope.$digest();
+		});
 
-	// 		promise.then(function(data) {
-	// 			expect(data.lat).toBe(40.014986);
-	// 		});
-
-	// 		$rootScope.$digest();
-	// 	});
-	// });
+	});
 });
