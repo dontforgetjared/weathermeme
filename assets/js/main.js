@@ -11,7 +11,6 @@
 
 	app.controller('MainController', ['$scope', '$q', '$timeout', 'WeatherService', 'LocationService', 
 		function($scope, $q, $timeout, WeatherService, LocationService) {
-			$scope.loc = '';
 			$scope.cityName = '';
 			$scope.showForm = false;
 			$scope.contentLoaded = false;
@@ -31,6 +30,7 @@
 				loc.then(function(data) {
 					var forecast = WeatherService.getForecast(data.k, data.D);
 					forecast.then(function(res) {
+						$timeout(dateTime, $scope.interval);
 						$scope.curForecast = res.currently;
 						$scope.weeklyForecast = res.daily;
 						$scope.contentLoaded = true;
@@ -39,100 +39,26 @@
 			};
 
 			$scope.getByLocation = function() {
-				if ('geolocation' in navigator) {
-					var loc = LocationService.getGeo();
+					var loc = LocationService.getLocation();
 
 					loc.then(function(data) {
 						var forecast = WeatherService.getForecast(data.coords.latitude, data.coords.longitude);
 						forecast.then(function(res) {
+							$timeout(dateTime, $scope.interval);
 							$scope.curForecast = res.currently;
 							$scope.weeklyForecast = res.daily;
 							$scope.contentLoaded = true;	
 						});
+					}, function(error) {
+						$scope.showForm = true;
 					}); 
-				} else {
-					$scope.showForm = true;	
-				}
 			};
 
 			$scope.getByLocation();
-			$timeout(dateTime, $scope.interval);
+			
 		}
 	]);
 
-})();
-(function() {
-	'use strict';
-
-	var app = angular.module('WeatherMeme');
-
-	app.factory('LocationService', ['$q', function($q) {
-		return {
-			getLocation: function() {
-				var deffered = $q.defer();
-
-				navigator.geolocation.getCurrentPosition(function(position) {
-					deffered.resolve(position);
-				}, function(error) {
-					deffered.reject(error);
-				});
-
-				return deffered.promise;
-			},
-
-			getLatLng: function(cityName) {
-				var deffered = $q.defer();
-				var geocoder = new google.maps.Geocoder();
-				geocoder.geocode({ 'address': cityName }, function(res, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-						deffered.resolve(res[0].geometry.location);
-					} else {
-						deffered.reject(status);
-					}
-				});
-
-				return deffered.promise;
-			},
-
-			getGeo: function() {
-				var deffered = $q.defer();
-
-				navigator.geolocation.getCurrentPosition(function(position) {
-					deffered.resolve(position);
-				}, function(error) {
-					deffered.reject(error);
-				});
-
-				return deffered.promise;
-			}
-		}
-	}]);
-})();
-(function() {
-	'use strict';
-
-	var app = angular.module('WeatherMeme');
-
-	app.constant('API_KEY', '86b4ed42d8cbf4a2923a4f187bd839f1');
-	app.constant('WEATHER_API', 'https://api.forecast.io/forecast/');
-
-	app.factory('WeatherService', ['$http', '$q', 'API_KEY', 'WEATHER_API', function($http, $q, API_KEY, WEATHER_API) {
-		return {		
-			getForecast: function(lat, lon) {
-				var deffered = $q.defer();
-
-				$http.get('//jsonp.nodejitsu.com/?url=' + encodeURI(WEATHER_API + API_KEY + '/' + lat + ',' + lon))
-					.success(function(res) {
-						deffered.resolve(res);
-					})
-					.error(function(error) {
-						deffered.reject(error);
-					});
-
-				return deffered.promise;
-			}	
-		}
-	}]);
 })();
 (function() {
 	'use strict';
@@ -167,4 +93,69 @@
 			return Math.round(mph) + ' MPH';
 		}
 	});
+})();
+(function() {
+	'use strict';
+
+	var app = angular.module('WeatherMeme');
+
+	app.factory('LocationService', ['$q', '$window', function($q, $window) {
+		return {
+			getLocation: function() {
+				var deffered = $q.defer();
+
+				if ($window.navigator && $window.navigator.geolocation){
+					$window.navigator.geolocation.getCurrentPosition(function(position) {
+						deffered.resolve(position);
+					}, function(error) {
+						deffered.reject({message: error.message, code: error.code });
+					});
+				} else {
+					deffered.reject({error: 'Geolocation failed'});
+				}
+
+				return deffered.promise;
+			},
+
+			getLatLng: function(cityName) {
+				var deffered = $q.defer();
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode({ 'address': cityName }, function(res, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						deffered.resolve(res[0].geometry.location);
+					} else {
+						deffered.reject(status);
+					}
+				});
+
+				return deffered.promise;
+			}
+		}
+	}]);
+})();
+(function() {
+	'use strict';
+
+	var app = angular.module('WeatherMeme');
+
+	app.constant('API_KEY', '86b4ed42d8cbf4a2923a4f187bd839f1');
+	app.constant('WEATHER_API', 'https://api.forecast.io/forecast/');
+
+	app.factory('WeatherService', ['$http', '$q', 'API_KEY', 'WEATHER_API', function($http, $q, API_KEY, WEATHER_API) {
+		return {		
+			getForecast: function(lat, lon) {
+				var deffered = $q.defer();
+
+				$http.get('//jsonp.nodejitsu.com/?url=' + encodeURI(WEATHER_API + API_KEY + '/' + lat + ',' + lon))
+					.success(function(res) {
+						deffered.resolve(res);
+					})
+					.error(function(error) {
+						deffered.reject(error);
+					});
+
+				return deffered.promise;
+			}	
+		}
+	}]);
 })();

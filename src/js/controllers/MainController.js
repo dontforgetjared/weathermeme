@@ -5,7 +5,6 @@
 
 	app.controller('MainController', ['$scope', '$q', '$timeout', 'WeatherService', 'LocationService', 
 		function($scope, $q, $timeout, WeatherService, LocationService) {
-			$scope.loc = '';
 			$scope.cityName = '';
 			$scope.showForm = false;
 			$scope.contentLoaded = false;
@@ -25,6 +24,7 @@
 				loc.then(function(data) {
 					var forecast = WeatherService.getForecast(data.k, data.D);
 					forecast.then(function(res) {
+						$timeout(dateTime, $scope.interval);
 						$scope.curForecast = res.currently;
 						$scope.weeklyForecast = res.daily;
 						$scope.contentLoaded = true;
@@ -33,24 +33,23 @@
 			};
 
 			$scope.getByLocation = function() {
-				if ('geolocation' in navigator) {
-					var loc = LocationService.getGeo();
+					var loc = LocationService.getLocation();
 
 					loc.then(function(data) {
 						var forecast = WeatherService.getForecast(data.coords.latitude, data.coords.longitude);
 						forecast.then(function(res) {
+							$timeout(dateTime, $scope.interval);
 							$scope.curForecast = res.currently;
 							$scope.weeklyForecast = res.daily;
 							$scope.contentLoaded = true;	
 						});
+					}, function(error) {
+						$scope.showForm = true;
 					}); 
-				} else {
-					$scope.showForm = true;	
-				}
 			};
 
 			$scope.getByLocation();
-			$timeout(dateTime, $scope.interval);
+			
 		}
 	]);
 

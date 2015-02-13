@@ -34,22 +34,4 @@ describe("Location Service", function() {
 			$rootScope.$digest();
 		});
 	});
-
-	describe("Geo location", function() {
-		it("should return a users lon and lat", function() {	
-			spyOn(navigator.geolocation,"getCurrentPosition").and.callFake(function() {
-		        position = { coords: { latitude: 40.014986, longitude: -105.270546 } };
-		        arguments[0](position);
-            });		
-			
-			var promise = locSrvc.getGeo();
-			
-			promise.then(function(data) {
-				expect(data.coords.latitude === 40.014986 && data.coords.longitude === -105.270546).toBeTruthy();
-			});
-
-			$rootScope.$digest();
-		});
-
-	});
 });

@@ -3,16 +3,20 @@
 
 	var app = angular.module('WeatherMeme');
 
-	app.factory('LocationService', ['$q', function($q) {
+	app.factory('LocationService', ['$q', '$window', function($q, $window) {
 		return {
 			getLocation: function() {
 				var deffered = $q.defer();
 
-				navigator.geolocation.getCurrentPosition(function(position) {
-					deffered.resolve(position);
-				}, function(error) {
-					deffered.reject(error);
-				});
+				if ($window.navigator && $window.navigator.geolocation){
+					$window.navigator.geolocation.getCurrentPosition(function(position) {
+						deffered.resolve(position);
+					}, function(error) {
+						deffered.reject({message: error.message, code: error.code });
+					});
+				} else {
+					deffered.reject({error: 'Geolocation failed'});
+				}
 
 				return deffered.promise;
 			},
@@ -26,18 +30,6 @@
 					} else {
 						deffered.reject(status);
 					}
-				});
-
-				return deffered.promise;
-			},
-
-			getGeo: function() {
-				var deffered = $q.defer();
-
-				navigator.geolocation.getCurrentPosition(function(position) {
-					deffered.resolve(position);
-				}, function(error) {
-					deffered.reject(error);
 				});
 
 				return deffered.promise;

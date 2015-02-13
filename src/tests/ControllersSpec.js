@@ -30,7 +30,7 @@ describe('Controllers', function() {
 
             spyOn(locSrvc, 'getLocation').and.callFake(function() {
             	var deferred = q.defer();
-            	deferred.resolve({ latitude: 40.014986, longitude: -105.270546 });
+            	deferred.resolve({ coords: { latitude: 40.014986, longitude: -105.270546 } });
             	return deferred.promise;
             });
 
@@ -42,13 +42,6 @@ describe('Controllers', function() {
 		});
 
 		describe('Get the forecast by location', function() {
-			beforeEach(function() {
-				spyOn(navigator.geolocation,"getCurrentPosition").and.callFake(function() {
-			        position = { coords: { latitude: 40.014986, longitude: -105.270546 } };
-			        arguments[0](position);
-            	});	
-			});
-			
 			it('should get the forecast by location', function() {
 				scope.getByLocation();
 				scope.$digest();
