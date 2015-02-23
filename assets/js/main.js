@@ -33,6 +33,7 @@
 				var loc = LocationService.getLatLng($scope.cityName);
 
 				loc.then(function(data) {
+					$scope.contentLoaded = false;
 					var forecast = WeatherService.getForecast(data.k, data.D);
 					forecast.then(function(res) {
 						$timeout(dateTime, $scope.interval);
@@ -44,25 +45,27 @@
 			};
 
 			$scope.getByLocation = function() {
-					var loc = LocationService.getLocation();
+				var loc = LocationService.getLocation();
 
-					loc.then(function(data) {
-						var forecast = WeatherService.getForecast(data.coords.latitude, data.coords.longitude);
-						forecast.then(function(res) {
-							$timeout(dateTime, $scope.interval);
-							$scope.curForecast = res.currently;
-							$scope.weeklyForecast = res.daily;
-							$scope.contentLoaded = true;	
-						});
+				loc.then(function(data) {
+					$scope.contentLoaded = false;
+					var curCity = LocationService.getLocationName(data.coords.latitude, data.coords.longitude);
+					curCity.then(function(res) {
+						$scope.cityName = res[0].address_components[2].long_name + ', ' + res[0].address_components[4].short_name;
+					});
 
-						var curCity = LocationService.getLocationName(data.coords.latitude, data.coords.longitude);
-						curCity.then(function(res) {
-							$scope.cityName = res[0].address_components[2].long_name + ', ' + res[0].address_components[4].short_name;
-						});
-					}, function(error) {
-						$scope.cityName = 'Denver, CO';
-						$scope.getByCityName();
-					}); 
+					var forecast = WeatherService.getForecast(data.coords.latitude, data.coords.longitude);
+					forecast.then(function(res) {
+						$timeout(dateTime, $scope.interval);
+						$scope.curForecast = res.currently;
+						$scope.weeklyForecast = res.daily;
+						$scope.contentLoaded = true;	
+					});
+				}, function(error) {
+					$scope.contentLoaded = false;
+					$scope.cityName = 'Denver, CO';
+					$scope.getByCityName();
+				}); 
 			};
 
 			$scope.init();
