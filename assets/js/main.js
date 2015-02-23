@@ -12,7 +12,6 @@
 	app.controller('MainController', ['$scope', '$q', '$timeout', 'WeatherService', 'LocationService', 
 		function($scope, $q, $timeout, WeatherService, LocationService) {
 			$scope.cityName = '';
-			$scope.showForm = false;
 			$scope.contentLoaded = false;
 			$scope.curForecast = {};
 			$scope.weeklyForecast = {};
@@ -22,6 +21,12 @@
 			var dateTime = function() {
 				$scope.clock = Date.now();
 				$timeout(dateTime, $scope.interval);
+			};
+
+			$scope.init = function() {
+				$scope.cityName = 'Denver, CO';
+				$scope.getByCityName();
+				$scope.getByLocation();
 			};
 
 			$scope.getByCityName = function() {
@@ -49,12 +54,18 @@
 							$scope.weeklyForecast = res.daily;
 							$scope.contentLoaded = true;	
 						});
+
+						var curCity = LocationService.getLocationName(data.coords.latitude, data.coords.longitude);
+						curCity.then(function(res) {
+							$scope.cityName = res[0].address_components[2].long_name + ', ' + res[0].address_components[4].short_name;
+						});
 					}, function(error) {
-						$scope.showForm = true;
+						$scope.cityName = 'Denver, CO';
+						$scope.getByCityName();
 					}); 
 			};
 
-			$scope.getByLocation();
+			$scope.init();
 			
 		}
 	]);
@@ -113,6 +124,21 @@
 				} else {
 					deffered.reject({error: 'Geolocation failed'});
 				}
+
+				return deffered.promise;
+			},
+
+			getLocationName: function(lat, lng) {
+				var deffered = $q.defer();
+				var reverseGeocode = new google.maps.LatLng(lat, lng);
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode({'latLng': reverseGeocode}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						deffered.resolve(results);
+					} else {
+						deffered.reject(status);
+					}
+				});
 
 				return deffered.promise;
 			},

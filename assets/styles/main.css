@@ -7214,7 +7214,6 @@ body {
 }
 
 .loader-wrapper {
-  background: url(../../assets/images/loader-bg.png) no-repeat;
   background-position: 0 0;
   height: 465px;
   padding-top: 20px;

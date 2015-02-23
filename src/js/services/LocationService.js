@@ -21,6 +21,21 @@
 				return deffered.promise;
 			},
 
+			getLocationName: function(lat, lng) {
+				var deffered = $q.defer();
+				var reverseGeocode = new google.maps.LatLng(lat, lng);
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode({'latLng': reverseGeocode}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						deffered.resolve(results);
+					} else {
+						deffered.reject(status);
+					}
+				});
+
+				return deffered.promise;
+			},
+
 			getLatLng: function(cityName) {
 				var deffered = $q.defer();
 				var geocoder = new google.maps.Geocoder();
