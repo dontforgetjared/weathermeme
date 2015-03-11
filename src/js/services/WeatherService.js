@@ -11,7 +11,7 @@
 			getForecast: function(lat, lon) {
 				var deffered = $q.defer();
 
-				$http.get('//jsonp.nodejitsu.com/?url=' + encodeURI(WEATHER_API + API_KEY + '/' + lat + ',' + lon))
+				$http.jsonp(WEATHER_API + API_KEY + '/' + lat + ',' + lon + '?callback=JSON_CALLBACK')
 					.success(function(res) {
 						deffered.resolve(res);
 					})
